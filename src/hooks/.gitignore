@@ -1,22 +1,24 @@
-# Node
+# 🔹 Frontend
 node_modules/
-dist/
 build/
+dist/
 
-# Logs
-logs/
+# 🔹 Backend
+target/
+*.class
+
+# 🔹 Logs
 *.log
 
-# Env files
+# 🔹 Environment
 .env
 
-# IDE
+# 🔹 IDE
 .vscode/
 .idea/
 
-# OS
+# 🔹 OS
 .DS_Store
+Thumbs.db
 
-# Java (Spring Boot)
-target/
-*.class
+#added by arshad
