@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { scoreResume } from '../api/aiApi';
 import ErrorMessage from '../components/ErrorMessage';
 import Button from '../components/Button';
 import { FileText, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const ResumeScore = () => {
   const [resumeText, setResumeText] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { refreshCredits } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!resumeText.trim()) return setError('Resume text is required');
+    if (!resumeText.trim()) {
+      const errorMsg = 'Resume text is required';
+      setError(errorMsg);
+      toast.error(errorMsg);
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -21,21 +30,32 @@ const ResumeScore = () => {
     try {
       const res = await scoreResume({ resumeText: resumeText.trim() });
 
-      console.log('RESUME SCORE API RESPONSE:', res.data);
+      console.log('RESUME SCORE API RESPONSE:', res);
 
       // Backend wraps: { success, message, data: { score, improvements, weaknesses, ... } }
-      const raw = res?.data?.data;
-
-      if (!raw) {
-        setError('No data received from AI engine');
-        return;
+      if (res.success) {
+        toast.success('Resume scored successfully!');
+        setResult(res.data);
+        await refreshCredits(); // Refresh balance
+      } else {
+        const errorMsg = res.message || 'Scoring failed. Please try again.';
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
-
-      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-      setResult(parsed);
     } catch (err) {
       console.error('ResumeScore API error:', err);
-      setError(err?.response?.data?.message || 'Error connecting to AI service.');
+      if (err?.response?.status === 402) {
+        toast.error('Insufficient credits for this action.');
+        setError(
+          <span>
+            Insufficient credits. <Link to="/credits" className="text-primary-500 underline font-bold">Buy more here →</Link>
+          </span>
+        );
+      } else {
+        const errorMsg = err.message || 'Failed to connect to AI engine. Try again later.';
+        setError(errorMsg);
+        toast.error(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -71,9 +91,14 @@ const ResumeScore = () => {
               disabled={loading}
             />
           </div>
-          <Button type="submit" loading={loading} icon={Sparkles} fullWidth disabled={loading}>
-            Analyze Performance
-          </Button>
+          <div className="space-y-3">
+            <Button type="submit" loading={loading} icon={Sparkles} fullWidth disabled={loading}>
+              Analyze Performance
+            </Button>
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center font-medium">
+              This In-depth Report will use <span className="text-primary-500 font-bold">4 credits</span>
+            </p>
+          </div>
         </form>
       </div>
 

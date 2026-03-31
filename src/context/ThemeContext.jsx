@@ -21,8 +21,13 @@ export const ThemeProvider = ({ children }) => {
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
+  // External setter for when user preference is fetched from backend
+  const setTheme = (theme) => {
+    setIsDarkMode(theme === 'dark');
+  };
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { generateRoadmap } from '../api/aiApi';
+import { useAuth } from '../hooks/useAuth';
 import { Map, Send, Sparkles, ChevronRight, Clock, AlertCircle, RefreshCw, BookOpen } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 // ─────────────────────────────────────────────
 // Tolerant field extractors — handles ANY AI shape
@@ -30,6 +33,7 @@ const Roadmap = () => {
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { refreshCredits } = useAuth();
 
   const validate = () => {
     if (!currentSkills.trim()) return 'Please enter your current skills';
@@ -40,7 +44,11 @@ const Roadmap = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const vError = validate();
-    if (vError) { setError(vError); return; }
+    if (vError) { 
+      setError(vError); 
+      toast.error(vError);
+      return; 
+    }
 
     setLoading(true);
     setError('');
@@ -54,23 +62,32 @@ const Roadmap = () => {
       });
 
       // Debug: always log the raw response so issues are visible in console
-      console.log('API RESPONSE:', res.data);
+      console.log('API RESPONSE:', res);
 
       // Backend wraps: { success, message, data: { title, summary, phases } }
-      const roadmapData = res?.data?.data;
-
-      if (!roadmapData || !roadmapData.phases) {
-        setError('No data received from AI engine. Please try again.');
-        return;
+      if (res.success) {
+        toast.success('Roadmap generated successfully!');
+        setRoadmap(res.data);
+        await refreshCredits(); // Refresh balance after success
+      } else {
+        const errorMsg = res.message || 'Generation failed. Try again.';
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
-
-      setRoadmap(roadmapData);
     } catch (err) {
       console.error('Roadmap API error:', err);
-      setError(
-        err?.response?.data?.message ||
-        'Failed to connect to AI service. Please check your connection and try again.'
-      );
+      if (err?.response?.status === 402) {
+        toast.error('Insufficient credits for this action.');
+        setError(
+          <span>
+            Insufficient credits. <Link to="/credits" className="text-primary-500 underline font-bold">Buy more here →</Link>
+          </span>
+        );
+      } else {
+        const errorMsg = err?.response?.data?.message || 'Failed to connect to AI service. Please check your connection and try again.';
+        setError(errorMsg);
+        toast.error(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -153,11 +170,11 @@ const Roadmap = () => {
           </div>
 
           {/* Submit */}
-          <div className="lg:col-span-3 pt-2">
+          <div className="lg:col-span-3 pt-2 space-y-3">
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-base rounded-2xl shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all duration-300 active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary-600 hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-base rounded-2xl shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 transition-all duration-300 active:scale-[0.98]"
             >
               {loading ? (
                 <>
@@ -174,6 +191,9 @@ const Roadmap = () => {
                 </>
               )}
             </button>
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center font-medium">
+              This Strategic Roadmap will use <span className="text-primary-500 font-bold">5 credits</span>
+            </p>
           </div>
         </form>
       </div>

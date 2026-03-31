@@ -10,8 +10,11 @@ import {
   User,
   ChevronRight,
   ShieldAlert,
-  Settings
+  Settings,
+  CreditCard,
+  Gift
 } from 'lucide-react';
+import CreditBadge from './CreditBadge';
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
@@ -27,11 +30,13 @@ const Sidebar = () => {
     { to: '/roadmap', label: 'Career Roadmap', icon: Map },
     { to: '/skill-gap', label: 'Skill Gap Analysis', icon: Target },
     { to: '/resume-score', label: 'Resume Optimizer', icon: FileText },
+    { to: '/credits', label: 'Credits & Billing', icon: CreditCard },
+    { to: '/referrals', label: 'Refer & Earn', icon: Gift },
+    { to: '/settings', label: 'Settings', icon: Settings },
   ];
 
   const adminItems = [
     { to: '/admin', label: 'Admin Console', icon: ShieldAlert },
-    { to: '/settings', label: 'Global Settings', icon: Settings },
   ];
 
   const navItems = user?.role === 'ADMIN' ? [...commonItems, ...adminItems] : commonItems;
@@ -77,10 +82,11 @@ const Sidebar = () => {
             <p className="text-sm font-bold text-gray-900 dark:text-white truncate transition-colors">
               {user?.name || user?.email?.split('@')[0] || 'User'}
             </p>
-            <div className="flex items-center space-x-1">
-              <p className="text-[10px] bg-primary-600 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">
+            <div className="flex flex-col items-start space-y-1">
+              <p className="text-[10px] bg-primary-600 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-tighter w-fit">
                 {user?.role || 'STUDENT'}
               </p>
+              <CreditBadge />
             </div>
           </div>
         </div>

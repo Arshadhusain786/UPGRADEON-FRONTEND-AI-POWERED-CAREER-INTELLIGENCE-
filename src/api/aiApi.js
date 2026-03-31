@@ -1,16 +1,13 @@
 import axiosInstance from './axiosInstance';
 
-export const generateRoadmap = async (payload) => {
-  // payload: { currentSkills: string, targetRole: string, experienceLevel: string }
-  return await axiosInstance.post('/api/ai/roadmap', payload);
+export const generateRoadmap = (payload) => {
+  return axiosInstance.post('/api/ai/roadmap', payload);
 };
 
-export const analyzeSkillGap = async (payload) => {
-  // payload: { currentSkills: string, targetRole: string }
-  return await axiosInstance.post('/api/ai/skill-gap', payload);
+export const analyzeSkillGap = (payload) => {
+  return axiosInstance.post('/api/ai/skill-gap', payload);
 };
 
-export const scoreResume = async (payload) => {
-  // payload: { resumeText: string }
-  return await axiosInstance.post('/api/ai/resume-score', payload);
+export const scoreResume = (payload) => {
+  return axiosInstance.post('/api/ai/resume-score', payload);
 };
