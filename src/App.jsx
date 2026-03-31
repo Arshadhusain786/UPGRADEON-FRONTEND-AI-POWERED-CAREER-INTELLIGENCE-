@@ -17,6 +17,9 @@ import ResumeScore from './pages/ResumeScore';
 import Credits from './pages/Credits';
 import Referrals from './pages/Referrals';
 import Settings from './pages/Settings';
+import Opportunities from './pages/Opportunities';
+import MyOpportunities from './pages/MyOpportunities';
+import MySentRequests from './pages/MySentRequests';
 import { Toaster } from 'react-hot-toast';
 
 const AppLayout = ({ children }) => {
@@ -136,6 +139,33 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/opportunities"
+                element={
+                  <ProtectedRoute>
+                    <Opportunities />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/my-opportunities"
+                element={
+                  <ProtectedRoute>
+                    <MyOpportunities />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/sent-requests"
+                element={
+                  <ProtectedRoute>
+                    <MySentRequests />
                   </ProtectedRoute>
                 }
               />

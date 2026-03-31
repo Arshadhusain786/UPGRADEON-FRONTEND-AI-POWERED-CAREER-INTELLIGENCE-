@@ -30,7 +30,7 @@ const Login = () => {
       hasToastShown.current = true;
       setTokens(token, '');
       const handleOAuthSuccess = async () => {
-        toast.success('Successfully logged in!');
+        toast.success('Successfully logged in!', { id: 'oauth-login-toast' });
         await login({ accessToken: token });
         // Clear params to avoid loop
         navigate('/dashboard', { replace: true });
@@ -63,7 +63,7 @@ const Login = () => {
       if (response.success) {
         const { accessToken, refreshToken } = response.data;
         setTokens(accessToken, refreshToken);
-        toast.success('Login successful! Welcome back.');
+        toast.success('Login successful! Welcome back.', { id: 'standard-login-toast' });
         await login(response.data);
         navigate('/dashboard');
       } else {

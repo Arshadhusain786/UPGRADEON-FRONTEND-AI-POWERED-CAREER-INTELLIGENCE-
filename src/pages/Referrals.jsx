@@ -57,7 +57,7 @@ const Referrals = () => {
 
   const shareOnWhatsApp = () => {
     if (stats?.referralLink && stats?.referralCode) {
-      const text = `Join NextPath and get +70 credits bonus! Use my code ${stats.referralCode} or sign up here: ${stats.referralLink}`;
+      const text = `Join Upgradon and get +70 credits bonus! Use my code ${stats.referralCode} or sign up here: ${stats.referralLink}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
   };
@@ -73,7 +73,7 @@ const Referrals = () => {
             Referral Program
           </h1>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} max-w-2xl`}>
-            Invite your friends to NextPath and earn extra AI credits. They get a joining bonus, and you get rewarded when they sign up!
+            Invite your friends to Upgradon and earn extra AI credits. They get a joining bonus, and you get rewarded when they sign up!
           </p>
         </div>
 

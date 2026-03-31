@@ -35,11 +35,11 @@ const Register = () => {
 
     const token = searchParams.get('token');
     const oauthError = searchParams.get('error');
-    
+
     if (token) {
       setTokens(token, '');
       const handleOAuthSuccess = async () => {
-        toast.success('Successfully registered & logged in!');
+        toast.success('Successfully registered & logged in!', { id: 'oauth-register-toast' });
         await login({ accessToken: token });
         navigate('/dashboard');
       };
@@ -85,7 +85,7 @@ const Register = () => {
     try {
       const response = await registerUser(form);
       if (response.success) {
-        toast.success('Registration successful! Welcome to Upgradon.');
+        toast.success('Registration successful! Welcome to Upgradon.', { id: 'standard-register-toast' });
         const { accessToken, refreshToken } = response.data || {};
         
         if (accessToken && refreshToken) {

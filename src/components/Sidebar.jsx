@@ -12,7 +12,10 @@ import {
   ShieldAlert,
   Settings,
   CreditCard,
-  Gift
+  Gift,
+  Briefcase,
+  Users,
+  Send
 } from 'lucide-react';
 import CreditBadge from './CreditBadge';
 
@@ -32,6 +35,9 @@ const Sidebar = () => {
     { to: '/resume-score', label: 'Resume Optimizer', icon: FileText },
     { to: '/credits', label: 'Credits & Billing', icon: CreditCard },
     { to: '/referrals', label: 'Refer & Earn', icon: Gift },
+    { to: '/opportunities', label: 'Opportunity Board', icon: Briefcase },
+    { to: '/my-opportunities', label: 'My Opportunities', icon: Users },
+    { to: '/sent-requests', label: 'Sent Requests', icon: Send },
     { to: '/settings', label: 'Settings', icon: Settings },
   ];
 

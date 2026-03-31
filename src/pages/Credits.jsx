@@ -11,7 +11,8 @@ import {
   ChevronLeft, 
   ChevronRight,
   TrendingUp,
-  Clock
+  Clock,
+  Lock
 } from 'lucide-react';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
@@ -56,9 +57,12 @@ const Credits = () => {
     init();
   }, [fetchPackages, fetchHistory]);
 
+  const [purchasing, setPurchasing] = useState(null); // Track which package is being purchased
+
   const handlePurchase = async (pkgName) => {
     setError('');
     setSuccessMsg('');
+    setPurchasing(pkgName);
     try {
       const res = await createOrder(pkgName);
       if (res.success) {
@@ -73,7 +77,7 @@ const Credits = () => {
             key: orderData.key,
             amount: orderData.amount,
             currency: orderData.currency,
-            name: "Upgradon AI",
+            name: "Upgradon",
             description: orderData.packageName,
             order_id: orderData.orderId,
             handler: async (response) => {
@@ -90,6 +94,8 @@ const Credits = () => {
                 }
               } catch (err) {
                 setError(err.message || "Payment verification failed. Please contact support.");
+              } finally {
+                setPurchasing(null);
               }
             },
             prefill: {
@@ -99,14 +105,24 @@ const Credits = () => {
             theme: {
               color: "#6366f1",
             },
+            modal: {
+              ondismiss: () => setPurchasing(null)
+            }
           };
           const rzp = new window.Razorpay(options);
           rzp.open();
         };
+        script.onerror = () => {
+          setError("Failed to load payment gateway. Check your internet connection.");
+          setPurchasing(null);
+        };
         document.body.appendChild(script);
       }
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to initiate purchase.");
+      console.error("Purchase error details:", err.response?.data);
+      const msg = err.response?.data?.message || err.message || "Failed to initiate purchase.";
+      setError(msg);
+      setPurchasing(null);
     }
   };
 
@@ -142,8 +158,15 @@ const Credits = () => {
             <div>
               <p className="text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Available Balance</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-6xl font-black text-gray-900 dark:text-white transition-colors">{credits?.totalCredits || 0}</span>
+                <span className="text-6xl font-black text-gray-900 dark:text-white transition-colors">
+                  {(credits?.totalCredits || 0) - (credits?.lockedCredits || 0)}
+                </span>
                 <span className="text-xl font-bold text-primary-500">Credits</span>
+                {credits?.lockedCredits > 0 && (
+                  <span className="text-xs font-black text-violet-500 uppercase tracking-tighter bg-violet-50 dark:bg-violet-900/20 px-2 py-1 rounded-lg border border-violet-100 dark:border-violet-900/30 ml-2">
+                    {credits.lockedCredits} Locked
+                  </span>
+                )}
               </div>
             </div>
             <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-2xl text-primary-600 dark:text-primary-400 transition-colors">
@@ -151,7 +174,7 @@ const Credits = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-[24px] transition-colors border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-2">
                 <TrendingUp size={16} />
@@ -165,6 +188,13 @@ const Credits = () => {
                 <span className="text-xs font-black uppercase tracking-wider">Lifetime Spent</span>
               </div>
               <p className="text-2xl font-black text-gray-900 dark:text-white">{credits?.totalSpent || 0}</p>
+            </div>
+            <div className="hidden md:block bg-violet-50 dark:bg-violet-900/10 p-6 rounded-[24px] transition-colors border border-violet-100 dark:border-violet-900/20">
+              <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400 mb-2">
+                <Lock size={16} />
+                <span className="text-xs font-black uppercase tracking-wider">Locked (Escrow)</span>
+              </div>
+              <p className="text-2xl font-black text-gray-900 dark:text-white">{credits?.lockedCredits || 0}</p>
             </div>
           </div>
 
@@ -212,10 +242,20 @@ const Credits = () => {
                   <span className="text-gray-400 dark:text-gray-500 text-sm font-bold ml-1">one-time</span>
                 </div>
                 <button 
+                  disabled={purchasing !== null}
                   onClick={() => handlePurchase(pkg.name)}
-                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3.5 rounded-2xl font-black text-sm transition-all hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white active:scale-[0.98] shadow-lg shadow-gray-200 dark:shadow-none"
+                  className={`w-full py-3.5 rounded-2xl font-black text-sm transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 ${
+                    purchasing === pkg.name 
+                      ? 'bg-primary-100 text-primary-600' 
+                      : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white'
+                  }`}
                 >
-                  Buy Now
+                  {purchasing === pkg.name ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : 'Buy Now'}
                 </button>
              </div>
           ))}
