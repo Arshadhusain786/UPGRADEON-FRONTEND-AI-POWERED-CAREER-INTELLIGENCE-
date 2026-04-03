@@ -14,6 +14,13 @@ import Dashboard from './pages/Dashboard';
 import Roadmap from './pages/Roadmap';
 import SkillGap from './pages/SkillGap';
 import ResumeScore from './pages/ResumeScore';
+import Credits from './pages/Credits';
+import Referrals from './pages/Referrals';
+import Settings from './pages/Settings';
+import Opportunities from './pages/Opportunities';
+import MyOpportunities from './pages/MyOpportunities';
+import MySentRequests from './pages/MySentRequests';
+import { Toaster } from 'react-hot-toast';
 
 const AppLayout = ({ children }) => {
   const { user, loading } = useAuth();
@@ -46,6 +53,29 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            success: {
+              style: {
+                background: '#10b981',
+                color: '#fff',
+              },
+            },
+            error: {
+              style: {
+                background: '#ef4444',
+                color: '#fff',
+              },
+            },
+            style: {
+              borderRadius: '20px',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: '600',
+              fontSize: '14px',
+            }
+          }}
+        />
         <Router>
           <AppLayout>
             <Routes>
@@ -84,6 +114,58 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ResumeScore />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/credits"
+                element={
+                  <ProtectedRoute>
+                    <Credits />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/referrals"
+                element={
+                  <ProtectedRoute>
+                    <Referrals />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/opportunities"
+                element={
+                  <ProtectedRoute>
+                    <Opportunities />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/my-opportunities"
+                element={
+                  <ProtectedRoute>
+                    <MyOpportunities />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/sent-requests"
+                element={
+                  <ProtectedRoute>
+                    <MySentRequests />
                   </ProtectedRoute>
                 }
               />

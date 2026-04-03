@@ -7,14 +7,23 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
-  color: #1a1a1a;
-  background-color: #ffffff;
+  color-scheme: light dark;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark mode: prevent white flash */
+html.dark body {
+  background-color: #030712;
+  color: #f9fafb;
+}
+
+html:not(.dark) body {
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 body {

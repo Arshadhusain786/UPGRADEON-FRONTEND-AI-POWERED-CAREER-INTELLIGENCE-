@@ -53,6 +53,15 @@ const Dashboard = () => {
           description="Deep-neural analysis of impact metrics and quantifiable results."
           accent="border-emerald-100 dark:border-emerald-900/30"
         />
+        <ToolCard
+          onClick={() => navigate('/opportunities')}
+          icon={Zap}
+          iconBg="bg-violet-50 dark:bg-violet-900/20"
+          iconColor="text-violet-600 dark:text-violet-400"
+          title="Opportunity Board"
+          description="Connect with professional opportunities using your platform credits."
+          accent="border-violet-100 dark:border-violet-900/30"
+        />
       </div>
 
       {/* Premium Content Card */}

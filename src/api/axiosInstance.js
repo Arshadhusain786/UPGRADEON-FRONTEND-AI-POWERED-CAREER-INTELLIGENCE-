@@ -22,23 +22,29 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: Handle 401 and refresh token
+// Response interceptor: Standardize data and handle 401
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Return only the data part of the response
+    return response.data;
+  },
   async (error) => {
     const originalRequest = error.config;
 
+    // Handle Token Refresh on 401
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const refreshToken = getRefreshToken();
-        if (!refreshToken) throw new Error('No refresh token available');
+        if (!refreshToken) throw new Error('No refresh token');
 
+        // Note: use axios directly here to avoid interceptor loop
         const response = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
           refreshToken,
         });
 
+        // Backend returns ApiResponse<TokenResponse> -> response.data.data
         const { accessToken, refreshToken: newRefreshToken } = response.data.data;
         setTokens(accessToken, newRefreshToken);
 
@@ -51,7 +57,14 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    // Standardize error structure for components
+    const errorResponse = {
+      message: error.response?.data?.message || 'Something went wrong',
+      status: error.response?.status,
+      data: error.response?.data?.data || null,
+    };
+
+    return Promise.reject(errorResponse);
   }
 );
 

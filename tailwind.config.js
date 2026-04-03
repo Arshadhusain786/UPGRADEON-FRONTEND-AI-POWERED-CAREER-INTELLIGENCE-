@@ -29,8 +29,15 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'slide-in-from-bottom': 'slideInFromBottom 0.5s ease-out forwards',
         'zoom-in': 'zoomIn 0.3s ease-out forwards',
+        'blob': 'blob 7s infinite',
       },
       keyframes: {
+        blob: {
+          '0%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+          '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+          '100%': { transform: 'translate(0px, 0px) scale(1)' },
+        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
@@ -46,5 +53,16 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function animateDelay({ addUtilities, matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'animation-delay': (value) => ({
+            'animation-delay': value,
+          }),
+        },
+        { values: theme('transitionDelay') }
+      )
+    },
+  ],
 }

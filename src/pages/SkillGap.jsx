@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { analyzeSkillGap } from '../api/aiApi';
+import { useAuth } from '../hooks/useAuth';
 import ErrorMessage from '../components/ErrorMessage';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { Target, CheckCircle2, AlertTriangle, Sparkles, Plus, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const SkillGap = () => {
   const [targetRole, setTargetRole] = useState('');
@@ -12,6 +15,7 @@ const SkillGap = () => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { refreshCredits } = useAuth();
 
   const addSkill = () => {
     if (skillInput.trim() && !currentSkills.includes(skillInput.trim())) {
@@ -33,8 +37,18 @@ const SkillGap = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (currentSkills.length === 0) return setError('Please add at least one skill');
-    if (!targetRole.trim()) return setError('Target role is required');
+    if (currentSkills.length === 0) {
+      const errorMsg = 'Please add at least one skill';
+      setError(errorMsg);
+      toast.error(errorMsg);
+      return;
+    }
+    if (!targetRole.trim()) {
+      const errorMsg = 'Target role is required';
+      setError(errorMsg);
+      toast.error(errorMsg);
+      return;
+    }
     
     setLoading(true);
     setError('');
@@ -46,21 +60,32 @@ const SkillGap = () => {
         targetRole: targetRole.trim()
       });
 
-      console.log("SKILL GAP API RESPONSE:", res.data);
+      console.log("SKILL GAP API RESPONSE:", res);
 
       // Backend wraps: { success, message, data: { missingSkills, strengths, recommendations } }
-      const raw = res?.data?.data;
-
-      if (!raw) {
-        setError("No data received from AI engine");
-        return;
+      if (res.success) {
+        toast.success('Skill gap analysis complete!');
+        setResult(res.data);
+        await refreshCredits(); // Refresh balance
+      } else {
+        const errorMsg = res.message || 'Analysis failed. Please try again.';
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
-
-      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-      setResult(parsed);
     } catch (err) {
       console.error('SkillGap API error:', err);
-      setError(err?.response?.data?.message || 'Error connecting to AI service. Please try again.');
+      if (err?.response?.status === 402) {
+        toast.error('Insufficient credits for this action.');
+        setError(
+          <span>
+            Insufficient credits. <Link to="/credits" className="text-primary-500 underline font-bold">Buy more here →</Link>
+          </span>
+        );
+      } else {
+        const errorMsg = err.message || 'Failed to connect to AI engine. Try again later.';
+        setError(errorMsg);
+        toast.error(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -125,9 +150,14 @@ const SkillGap = () => {
             {currentSkills.length === 0 && <p className="text-gray-400 dark:text-gray-500 text-sm italic ml-1">No skills added yet.</p>}
           </div>
 
-          <Button type="submit" loading={loading} icon={Target} fullWidth disabled={loading}>
-            Run Critical Analysis
-          </Button>
+          <div className="space-y-3">
+            <Button type="submit" loading={loading} icon={Target} fullWidth disabled={loading}>
+              Run Critical Analysis
+            </Button>
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center font-medium">
+              This Detailed Analysis will use <span className="text-primary-500 font-bold">3 credits</span>
+            </p>
+          </div>
         </form>
       </div>
 
