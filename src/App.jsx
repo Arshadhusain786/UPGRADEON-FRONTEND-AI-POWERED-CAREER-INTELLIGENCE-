@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import Roadmap from './pages/Roadmap';
 import SkillGap from './pages/SkillGap';
 import ResumeScore from './pages/ResumeScore';
+import ResumeUpload from './pages/ResumeUpload';
 import Credits from './pages/Credits';
 import Referrals from './pages/Referrals';
 import Settings from './pages/Settings';
@@ -21,6 +22,7 @@ import Opportunities from './pages/Opportunities';
 import MyOpportunities from './pages/MyOpportunities';
 import MySentRequests from './pages/MySentRequests';
 import { Toaster } from 'react-hot-toast';
+import Chatbot from './components/Chatbot';
 
 const AppLayout = ({ children }) => {
   const { user, loading } = useAuth();
@@ -76,6 +78,7 @@ function App() {
             }
           }}
         />
+        <Chatbot />
         <Router>
           <AppLayout>
             <Routes>
@@ -114,6 +117,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ResumeScore />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/resume-upload"
+                element={
+                  <ProtectedRoute>
+                    <ResumeUpload />
                   </ProtectedRoute>
                 }
               />

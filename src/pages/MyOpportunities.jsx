@@ -384,6 +384,12 @@ const MyOpportunities = () => {
                   placeholder="Deep-dive into the role, team, and expectations..."
                   className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 text-gray-900 dark:text-white min-h-[120px] outline-none focus:ring-2 focus:ring-primary-500 transition-all font-medium"
                 />
+                <div className="flex justify-between items-center mt-1 px-1">
+                  <p className={`text-xs font-bold ${formData.description.length < 20 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                    {formData.description.length < 20 ? '⚠️ Description too short (min 20 chars)' : '✅ Description length OK'}
+                  </p>
+                  <span className="text-xs text-gray-400">{formData.description.length} characters</span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -417,7 +423,12 @@ const MyOpportunities = () => {
                 <Button 
                   type="submit"
                   loading={submitting}
-                  className="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl shadow-xl shadow-black/10 transition-all font-black"
+                  disabled={formData.description.length < 20}
+                  className={`flex-1 rounded-2xl shadow-xl shadow-black/10 transition-all font-black ${
+                    formData.description.length < 20 
+                    ? 'bg-gray-200 dark:bg-zinc-800 text-gray-400 cursor-not-allowed opacity-50' 
+                    : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                  }`}
                 >
                   {editingPost ? 'Update Post' : 'Post Opportunity'}
                 </Button>

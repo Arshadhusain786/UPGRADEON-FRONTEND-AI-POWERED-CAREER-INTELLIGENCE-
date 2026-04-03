@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../context/ThemeContext';
-import { updateProfile, changePassword } from '../api/authApi';
+import { updateProfile as updateUserProfile } from '../api/userApi';
+import { changePassword } from '../api/authApi';
 import toast from 'react-hot-toast';
 import { 
   User, 
@@ -29,6 +30,9 @@ const Settings = () => {
   // Profile State
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
+  const [bio, setBio] = useState(user?.bio || '');
+  const [targetRole, setTargetRole] = useState(user?.targetRole || '');
+  const [skills, setSkills] = useState(user?.skills || '');
   const [loading, setLoading] = useState(false);
 
   // Password State
@@ -42,7 +46,7 @@ const Settings = () => {
     setLoading(true);
 
     try {
-      const res = await updateProfile({ name, email });
+      const res = await updateUserProfile({ name, email, bio, targetRole, skills });
       if (res.success) {
         toast.success('Profile updated successfully!');
         await refreshUser();
@@ -88,7 +92,7 @@ const Settings = () => {
 
     try {
       toggleTheme(); // Local update
-      const res = await updateProfile({ name: user.name, email: user.email, theme: themeStr });
+      const res = await updateUserProfile({ name: user.name, email: user.email, theme: themeStr });
       if (res.success) {
         toast.success('Theme preference saved!');
         await refreshUser();
@@ -181,6 +185,32 @@ const Settings = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   icon={Mail}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input 
+                  label="Target Role"
+                  placeholder="e.g. Backend Developer"
+                  value={targetRole}
+                  onChange={(e) => setTargetRole(e.target.value)}
+                  icon={User}
+                />
+                <Input 
+                  label="Skills (comma separated)"
+                  placeholder="Java, React, SQL"
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
+                  icon={Shield}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Bio</label>
+                <textarea
+                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-gray-800 transition-all outline-none text-gray-900 dark:text-white placeholder:text-gray-400"
+                  rows={4}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Tell us about yourself..."
                 />
               </div>
               <div className="flex justify-end">

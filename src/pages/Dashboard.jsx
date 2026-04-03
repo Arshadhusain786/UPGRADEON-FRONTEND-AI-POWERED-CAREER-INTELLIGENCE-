@@ -1,14 +1,74 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Map, Target, FileText, ChevronRight, Zap } from 'lucide-react';
+import { Map, Target, FileText, ChevronRight, Zap, CreditCard, Lock, Wifi } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, credits } = useAuth();
   const navigate = useNavigate();
 
   return (
     <div className="space-y-12">
+      {/* ── Credit Summary Strip ── */}
+      {credits && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          
+          {/* Total Available — PRIMARY — most prominent */}
+          <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-primary-600 to-indigo-600 
+                          rounded-3xl p-6 text-white shadow-lg shadow-primary-500/20">
+            <div className="flex items-center space-x-2 mb-3 opacity-80">
+              <CreditCard size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">Total Available</span>
+            </div>
+            <p className="text-4xl font-black tracking-tight">
+              {credits.totalCredits ?? 0}
+            </p>
+            <p className="text-xs opacity-60 mt-1 font-medium">credits in your account</p>
+          </div>
+
+          {/* Free Today */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 
+                          rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center space-x-2 mb-3 text-emerald-600 dark:text-emerald-400">
+              <Zap size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">Free Today</span>
+            </div>
+            <p className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+              {credits.freeTodayRemaining ?? 0}
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">resets at midnight</p>
+          </div>
+
+          {/* Weekly Connections */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 
+                          rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center space-x-2 mb-3 text-violet-600 dark:text-violet-400">
+              <Wifi size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">Connections Left</span>
+            </div>
+            <p className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+              {credits.freeConnectionsThisWeek ?? 0}
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">free this week</p>
+          </div>
+
+          {/* Locked — visually dimmed, secondary importance */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 
+                          rounded-3xl p-6 opacity-60">
+            <div className="flex items-center space-x-2 mb-3 text-gray-400 dark:text-gray-500">
+              <Lock size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">In Escrow</span>
+            </div>
+            <p className="text-3xl font-black text-gray-500 dark:text-gray-400 tracking-tight">
+              {credits.lockedCredits ?? 0}
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">
+              held for pending requests
+            </p>
+          </div>
+
+        </div>
+      )}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="space-y-1">
           <h1 className="text-5xl font-black text-gray-900 dark:text-white tracking-tighter transition-colors">

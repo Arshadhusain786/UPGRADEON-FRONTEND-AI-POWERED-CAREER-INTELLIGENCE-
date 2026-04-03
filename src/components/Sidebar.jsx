@@ -15,7 +15,8 @@ import {
   Gift,
   Briefcase,
   Users,
-  Send
+  Send,
+  UploadCloud
 } from 'lucide-react';
 import CreditBadge from './CreditBadge';
 
@@ -33,6 +34,7 @@ const Sidebar = () => {
     { to: '/roadmap', label: 'Career Roadmap', icon: Map },
     { to: '/skill-gap', label: 'Skill Gap Analysis', icon: Target },
     { to: '/resume-score', label: 'Resume Optimizer', icon: FileText },
+    { to: '/resume-upload', label: 'Resume Upload', icon: UploadCloud },
     { to: '/credits', label: 'Credits & Billing', icon: CreditCard },
     { to: '/referrals', label: 'Refer & Earn', icon: Gift },
     { to: '/opportunities', label: 'Opportunity Board', icon: Briefcase },

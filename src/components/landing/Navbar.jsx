@@ -21,9 +21,12 @@ const LandingNavbar = () => {
         </div>
         
         {/* Desktop Nav Links */}
-        <div className="hidden lg:flex items-center space-x-12 text-sm font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+        <div className="hidden lg:flex items-center space-x-10 text-sm font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
           <a href="#how-it-works" className="hover:text-primary-600 transition-colors">How it Works</a>
           <a href="#features" className="hover:text-primary-600 transition-colors">Features</a>
+          <a href="#testimonials" className="hover:text-primary-600 transition-colors">Reviews</a>
+          <a href="#pricing" className="hover:text-primary-600 transition-colors">Pricing</a>
+          <a href="#faq" className="hover:text-primary-600 transition-colors">FAQ</a>
         </div>
 
         {/* Right: Theme + Auth Buttons */}

@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 const ResumeScore = () => {
   const [resumeText, setResumeText] = useState('');
+  const [targetRole, setTargetRole] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,7 +29,11 @@ const ResumeScore = () => {
     setResult(null);
 
     try {
-      const res = await scoreResume({ resumeText: resumeText.trim() });
+      const payload = { resumeText: resumeText.trim() };
+      if (targetRole.trim()) {
+        payload.targetRole = targetRole.trim();
+      }
+      const res = await scoreResume(payload);
 
       console.log('RESUME SCORE API RESPONSE:', res);
 
@@ -76,6 +81,17 @@ const ResumeScore = () => {
 
       <div className="bg-white dark:bg-gray-900 rounded-[40px] shadow-sm border border-gray-100 dark:border-gray-800 p-12 mb-8 transition-colors duration-300">
         <form onSubmit={handleSubmit} className="space-y-8">
+          <div>
+            <label className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest transition-colors tracking-widest block mb-2 ml-1">Target Role (Optional)</label>
+            <input
+              type="text"
+              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-gray-800 transition-all outline-none text-gray-900 dark:text-white placeholder:text-gray-400"
+              placeholder="e.g. Frontend Developer"
+              value={targetRole}
+              onChange={(e) => setTargetRole(e.target.value)}
+              disabled={loading}
+            />
+          </div>
           <div>
             <div className="flex justify-between items-center mb-3 ml-1">
               <label className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest transition-colors tracking-widest">Resume Full Text</label>

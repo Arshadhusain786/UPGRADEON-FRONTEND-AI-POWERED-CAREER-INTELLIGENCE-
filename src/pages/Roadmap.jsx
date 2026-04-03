@@ -74,9 +74,9 @@ const Roadmap = () => {
         setError(errorMsg);
         toast.error(errorMsg);
       }
-    } catch (err) {
       console.error('Roadmap API error:', err);
-      if (err?.response?.status === 402) {
+      // err is flattened by axiosInstance interceptor to { message, status, data }
+      if (err.status === 402) {
         toast.error('Insufficient credits for this action.');
         setError(
           <span>
@@ -84,7 +84,7 @@ const Roadmap = () => {
           </span>
         );
       } else {
-        const errorMsg = err?.response?.data?.message || 'Failed to connect to AI service. Please check your connection and try again.';
+        const errorMsg = err.message || 'Failed to connect to AI service. Please check your connection and try again.';
         setError(errorMsg);
         toast.error(errorMsg);
       }
