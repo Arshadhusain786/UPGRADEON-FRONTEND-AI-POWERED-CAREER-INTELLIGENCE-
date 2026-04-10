@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import Button from '../components/Button';
+import ConfirmModal from '../components/ConfirmModal';
 
 const MyOpportunities = () => {
   const { user, refreshCredits } = useAuth();
@@ -51,6 +52,7 @@ const MyOpportunities = () => {
   const [showDeclineModal, setShowDeclineModal] = useState(null);
   const [declineNote, setDeclineNote] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, type: '', data: null });
 
   const fetchMyPosts = useCallback(async (p = page) => {
     setLoading(true);
@@ -119,7 +121,18 @@ const MyOpportunities = () => {
   };
 
   const handleClosePost = async (id) => {
-    if (!window.confirm('Are you sure you want to close this opportunity? It will no longer be visible to others.')) return;
+    setConfirmModal({
+      isOpen: true,
+      type: 'close',
+      data: id,
+      title: 'Close Opportunity?',
+      message: 'Are you sure you want to close this opportunity? It will no longer be visible to others.',
+      confirmText: 'Close Post',
+      modalType: 'danger'
+    });
+  };
+
+  const executeClosePost = async (id) => {
     try {
       const res = await closePost(id);
       if (res.success) {
@@ -162,7 +175,18 @@ const MyOpportunities = () => {
   };
 
   const handleMarkHired = async (id) => {
-    if (!window.confirm('Confirm this person was hired? You will earn +5 platform reward credits as a top contributor acknowledgment.')) return;
+    setConfirmModal({
+      isOpen: true,
+      type: 'hire',
+      data: id,
+      title: 'Confirm Hire?',
+      message: 'Confirm this person was hired? You will earn +5 platform reward credits as a top contributor acknowledgment.',
+      confirmText: 'Yes, Hired!',
+      modalType: 'primary'
+    });
+  };
+
+  const executeMarkHired = async (id) => {
     try {
       const res = await markHired(id);
       if (res.success) {
@@ -464,6 +488,20 @@ const MyOpportunities = () => {
            </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        onConfirm={() => {
+          if (confirmModal.type === 'close') executeClosePost(confirmModal.data);
+          if (confirmModal.type === 'hire') executeMarkHired(confirmModal.data);
+        }}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        type={confirmModal.modalType}
+      />
     </div>
   );
 };

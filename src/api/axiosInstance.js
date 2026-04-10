@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '../utils/tokenStorage';
 
-const API_BASE_URL = 'http://localhost:8080'; // Default Spring Boot port
+import { API_BASE_URL } from '../config/api';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

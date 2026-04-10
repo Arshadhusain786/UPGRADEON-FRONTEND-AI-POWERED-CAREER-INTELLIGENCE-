@@ -9,6 +9,11 @@
 
   color-scheme: light dark;
 
+  /* Primary Neon Colors */
+  --neon-cyan: 34, 211, 238;    /* #22d3ee */
+  --neon-violet: 139, 92, 246;  /* #8b5cf6 */
+  --neon-emerald: 16, 185, 129; /* #10b981 */
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,9 +26,56 @@ html.dark body {
   color: #f9fafb;
 }
 
-html:not(.dark) body {
-  background-color: #ffffff;
-  color: #1a1a1a;
+/* 🧪 PREMIUM UTILITIES */
+
+.glass {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10;
+}
+
+.glass-dark {
+  @apply backdrop-blur-xl bg-black/20 border border-white/5;
+}
+
+.neon-border {
+  box-shadow: 0 0 15px -3px rgba(var(--neon-cyan), 0.3);
+}
+
+.neon-border-hover:hover {
+  box-shadow: 0 0 25px -5px rgba(var(--neon-cyan), 0.5);
+  border-color: rgba(var(--neon-cyan), 0.5);
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-violet-500 to-emerald-400;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) rotate(45deg); }
+  100% { transform: translateX(150%) rotate(45deg); }
 }
 
 body {
@@ -35,56 +87,4 @@ body {
 
 #root {
   width: 100%;
-}
-
-/* Custom transitions */
-.animate-in {
-  animation-duration: 0.5s;
-  animation-fill-mode: both;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation-name: fadeIn;
-}
-
-@keyframes slideInFromBottom {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.slide-in-from-bottom-4 {
-  animation-name: slideInFromBottom;
-}
-
-@keyframes zoomIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.zoom-in {
-  animation-name: zoomIn;
 }

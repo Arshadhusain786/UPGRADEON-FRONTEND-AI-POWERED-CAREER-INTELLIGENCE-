@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
+import ConfirmModal from '../components/ConfirmModal';
 
 const MySentRequests = () => {
   const { user, refreshCredits } = useAuth();
@@ -30,6 +31,7 @@ const MySentRequests = () => {
   const [error, setError] = useState('');
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, data: null });
 
   const fetchData = useCallback(async (p = page) => {
     setLoading(true);
@@ -58,7 +60,17 @@ const MySentRequests = () => {
   }, [page, fetchData]);
 
   const handleCancel = async (id) => {
-    if (!window.confirm('Cancel this connection request? Your locked credit (if any) will be refunded.')) return;
+    setConfirmModal({
+      isOpen: true,
+      data: id,
+      title: 'Cancel Request?',
+      message: 'Are you sure you want to cancel this connection request? Your locked credit (if any) will be refunded.',
+      confirmText: 'Cancel Request',
+      modalType: 'danger'
+    });
+  };
+
+  const executeCancel = async (id) => {
     try {
       const res = await cancelRequest(id);
       if (res.success) {
@@ -169,6 +181,17 @@ const MySentRequests = () => {
            Credits locked during pending requests are automatically returned if the request is declined or cancelled."
         </p>
       </footer>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        onConfirm={() => executeCancel(confirmModal.data)}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        type={confirmModal.modalType}
+      />
     </div>
   );
 };

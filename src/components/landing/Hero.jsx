@@ -1,45 +1,64 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Gift } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative pt-60 pb-40 px-6 z-10">
-      <div className="max-w-6xl mx-auto text-center">
-        <div className="inline-flex items-center space-x-2 px-6 py-2.5 bg-primary-50/50 dark:bg-primary-900/10 rounded-full text-primary-600 dark:text-primary-400 text-[11px] font-black uppercase tracking-[0.2em] border border-primary-100/50 dark:border-primary-900/20 mb-12 animate-in fade-in slide-in-from-top duration-700">
+    <section className="relative pt-32 md:pt-60 pb-32 md:pb-40 px-6 z-10 overflow-hidden">
+      <div className="max-w-7xl mx-auto text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center space-x-2 px-6 py-2.5 glass rounded-full text-cyan-400 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] mb-8 md:mb-12"
+        >
           <Sparkles size={14} fill="currentColor" />
-          <span>AI-Powered Career Growth Engine</span>
-        </div>
+          <span>AI-Powered Career Intelligence</span>
+        </motion.div>
         
-        <h1 className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tight leading-[0.9] mb-10 animate-in fade-in slide-in-from-bottom duration-1000">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-5xl md:text-9xl lg:text-[130px] font-black tracking-tight leading-[0.95] md:leading-[0.85] mb-8 md:mb-10 text-slate-900 dark:text-white"
+        >
           Build Your <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-indigo-600 to-violet-600 font-black relative">
-            Career with Clarity
-            <div className="absolute -bottom-4 left-0 w-full h-4 bg-primary-500/5 -rotate-1 rounded-full blur-xl"></div>
+          <span className="text-gradient font-black">
+            Future Now
           </span>
-        </h1>
+        </motion.h1>
         
-        <p className="text-xl md:text-2xl text-gray-500 dark:text-gray-400 font-medium max-w-3xl mx-auto mb-16 animate-in fade-in slide-in-from-bottom delay-200 duration-1000 leading-relaxed">
-          Unlock personalized AI roadmaps, deep skill gap insights, and real professional opportunities. Stop guessing your next move.
-        </p>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-xl md:text-2xl text-slate-600 dark:text-gray-400 font-medium max-w-3xl mx-auto mb-16 leading-relaxed"
+        >
+          The only career platform that uses RAG-powered AI and professional networks to guide your every move. Precision, not guesswork.
+        </motion.p>
         
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 animate-in fade-in slide-in-from-bottom delay-300 duration-1000">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-8"
+        >
           <Link 
             to="/register" 
-            className="group bg-primary-600 hover:bg-primary-700 text-white px-12 py-6 rounded-[28px] font-black text-xl flex items-center gap-4 transition-all shadow-[0_30px_60px_-15px_rgba(37,99,235,0.4)] hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.6)] hover:-translate-y-1 active:scale-95"
+            className="group relative shimmer bg-cyan-600 hover:bg-cyan-500 text-white px-12 py-6 rounded-2xl font-black text-xl flex items-center gap-4 transition-all neon-border"
           >
-            Start Free (20 Credits)
+            Start Your Journey
             <ArrowRight className="group-hover:translate-x-2 transition-transform duration-300" />
           </Link>
           <button 
             onClick={() => navigate('/login')}
-            className="flex items-center gap-4 px-10 py-6 rounded-[28px] font-black text-xl text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900/50 border border-transparent hover:border-gray-200 dark:hover:border-gray-800 transition-all active:scale-95"
+            className="flex items-center gap-4 px-10 py-6 rounded-2xl font-black text-xl text-slate-900 dark:text-white glass hover:bg-black/5 dark:hover:bg-white/10 transition-all border border-slate-200 dark:border-white/10"
           >
-            <span>Log In to Dashboard</span>
+            <span>Access Dashboard</span>
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

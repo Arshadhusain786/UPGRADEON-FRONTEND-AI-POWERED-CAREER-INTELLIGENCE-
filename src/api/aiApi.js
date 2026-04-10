@@ -21,8 +21,8 @@ export const uploadResume = (file, targetRole) => {
   });
 };
 
-export const chatPublic = (message) =>
-  axiosInstance.post('/api/chat/public', { message });
+export const chatPublic = (message, sessionId = null) =>
+  axiosInstance.post('/api/chat/public', { message, sessionId });
 
 export const chatAuthenticated = (message) =>
   axiosInstance.post('/api/chat/message', { message });

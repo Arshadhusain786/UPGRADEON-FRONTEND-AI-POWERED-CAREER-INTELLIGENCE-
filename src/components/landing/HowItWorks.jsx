@@ -21,7 +21,7 @@ const HowItWorks = () => {
             number="02" 
             icon={Gift} 
             title="Get Free Credits" 
-            desc="Instantly unlock 20 free platform credits to explore premium AI features." 
+            desc="Instantly unlock 20 free platform credits to explore premium AI roadmaps and skill analyses." 
           />
           <StepCard 
             number="03" 

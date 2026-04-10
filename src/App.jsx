@@ -23,6 +23,7 @@ import MyOpportunities from './pages/MyOpportunities';
 import MySentRequests from './pages/MySentRequests';
 import { Toaster } from 'react-hot-toast';
 import Chatbot from './components/Chatbot';
+import CreditModal from './components/CreditModal';
 
 const AppLayout = ({ children }) => {
   const { user, loading } = useAuth();
@@ -78,8 +79,9 @@ function App() {
             }
           }}
         />
-        <Chatbot />
         <Router>
+          <Chatbot />
+          <CreditModal />
           <AppLayout>
             <Routes>
               {/* Public Routes */}

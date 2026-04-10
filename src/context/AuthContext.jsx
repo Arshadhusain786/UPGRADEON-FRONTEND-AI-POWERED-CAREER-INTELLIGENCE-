@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [credits, setCredits] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
 
   const fetchCredits = useCallback(async () => {
     try {
@@ -76,7 +77,9 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout, 
       refreshUser: fetchUser, 
-      refreshCredits: fetchCredits 
+      refreshCredits: fetchCredits,
+      isCreditModalOpen,
+      setIsCreditModalOpen
     }}>
       {children}
     </AuthContext.Provider>
